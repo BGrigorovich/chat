@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div id="login_form">
+    {% if user.is_authenticated %}
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <label for="logout_button">{{user.username}}</label>
+            <input type="submit" name="logout_button" id="logout_button" value="Log out">
+        </form>
+    {% else %}
+        <form action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="username" id="username" placeholder="Email or username">
+            <input type="password" name="password" id="password" placeholder="Password">
+            <input type="submit" name="login_button" id="login_button" value="Log in">
+        </form>
+        {% if login_error %}
+            <label class="error">{{ login_error }}</label>
+        {% endif %}
+        <a href="/signup/">Sign up</a>
+    {% endif %}
+</div>
+</body>
+</html>

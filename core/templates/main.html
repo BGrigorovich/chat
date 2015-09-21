@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+{% include 'login.html' %}
+<div id="messages">
+    <table>
+        {% for message in messages %}
+        <tr>
+
+            <td>
+                <div class="message_user_id">
+                    {{message.user_id}}
+                </div>
+            </td>
+            <td>
+                <div id="message_message">
+                    {{message.message}}
+                </div>
+
+            </td>
+            <td>
+                <div id="message_date_time">
+                    {{message.date_time}}
+                </div>
+
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+<div id="send_message">
+    {% if user.is_authenticated %}
+    <form action="{% url 'send_message' %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="message" id="message" placeholder="Your message">
+        <input type="submit" value="Send">
+    </form>
+    {% else %}
+    <form method="post">
+        <input type="text" placeholder="Log in or sign up to send messages" disabled>
+        <input type="submit" value="Send" disabled>
+    </form>
+    {% endif %}
+</div>
+</body>
+</html>
