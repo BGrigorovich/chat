@@ -5,15 +5,13 @@
     <title></title>
 </head>
 <body>
+{% load staticfiles %}
 {% if user.is_authenticated %}
 You already logged in
 {% else %}
 <div id="signup_from">
-    <form action="{% url 'signup_form' %}" method="post">
-        {% csrf_token %}
-        <input type="text" name="username" id="username" placeholder="username">
-        <input type="email" name="email" id="email" placeholder="Email">
-        <input type="password" name="password" id="password" placeholder="Password">
+    <form action="{% url 'signup_form' %}" method="post"> {% csrf_token %}
+        {{ form.as_p }}
         <input type="submit" name="signup_button" id="signup_button" value="Sign up">
     </form>
 </div>

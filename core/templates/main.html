@@ -5,6 +5,7 @@
     <title></title>
 </head>
 <body>
+
 {% include 'login.html' %}
 <div id="messages">
     <table>
@@ -13,17 +14,17 @@
 
             <td>
                 <div class="message_user_id">
-                    {{message.user_id}}
+                    <b>{{message.user_id}}:</b>
                 </div>
             </td>
             <td>
-                <div id="message_message">
+                <div class="message_message">
                     {{message.message}}
                 </div>
 
             </td>
             <td>
-                <div id="message_date_time">
+                <div class="message_date_time">
                     {{message.date_time}}
                 </div>
 

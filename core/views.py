@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response, redirect
 from django.template import RequestContext
+from django.template.context_processors import csrf
 from core.models import Messages
 import datetime
 
@@ -19,7 +20,9 @@ def signup_page(request):
 
 @login_required
 def send_message(request):
-    message = request.POST.get('message', '')
-    Messages.save(Messages.create(user=request.user, message=message))
-    messages = Messages.objects.all()
-    return redirect('/')
+    args = {}
+    args.update(csrf(request))
+    if request.POST:
+        message = request.POST.get('message', '')
+        Messages.save(Messages.create(user=request.user, message=message))
+        return redirect('/')

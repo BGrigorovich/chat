@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.context_processors import auth
 # from django.http import request
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, render_to_response
 from django.template import RequestContext
@@ -42,8 +43,10 @@ def signup_view(request):
         if new_user_form.is_valid():
             new_user_form.save()
             new_user = authenticate(username=new_user_form.cleaned_data['username'],
-                                    email=new_user_form.cleaned_data['email'],
-                                    password=new_user_form.cleaned_data['password'])
-            login(request, new_user)
-            return HttpResponseRedirect('/')
-            # return redirect('/')
+                                    password=new_user_form.cleaned_data['password2'])
+            if not new_user.is_anonymous():
+                login(request, new_user)
+            return redirect('/')
+        else:
+            args['form'] = new_user_form
+    return render_to_response('signup.html', args, context_instance=RequestContext(request))
