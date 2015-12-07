@@ -5,11 +5,14 @@ import datetime
 
 class Messages(models.Model):
     id = models.IntegerField(primary_key=True)
-    user_id = models.ForeignKey(User)
+    user = models.ForeignKey(User)
     message = models.TextField()
     date_time = models.DateTimeField()
 
+    def __str__(self):
+        return self.message
+
     @classmethod
     def create(cls, user, message):
-        new_message = cls(user_id=user, message=message, date_time=datetime.datetime.now())
+        new_message = cls(user=user, message=message, date_time=datetime.datetime.now())
         return new_message

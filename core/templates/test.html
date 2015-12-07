@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html ng-app="chatApp">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js"></script>
+    <script src="//127.0.0.1:8000/static/js/angular-filter.min.js"></script>
+</head>
+<body>
+<div ng-controller="myController">
+    <ul>
+        <li ng-repeat="x in azaza">
+            {$ x.name + ', ' + x.country $}
+        </li>
+    </ul>
+</div>
+<div>
+    <input type="text" ng-model="yourName" placeholder="Enter a name here">
+
+    <h1>Hello, {$ yourName $}!</h1>
+</div>
+
+<div ng-app="chatApp" ng-controller="ajaxController">
+    <ul>
+        <li ng-repeat="x in names">
+            {$ x.Name + ', ' + x.Country $}
+        </li>
+    </ul>
+</div>
+
+<div ng-app="chatApp" ng-controller="ajaxController">
+    {$ messages $}
+    <ul>
+        <li ng-repeat="message in messages track by $index">
+            <!--{$ message.fields $}-->
+            {$ message.fields.user + ', ' + message.fields.message $}
+        </li>
+    </ul>
+</div>
+<div ng-controller="myController">
+    <ul ng-repeat="(key, value) in players | groupBy: 'team'">
+        Group name: {$ key $}
+        <li ng-repeat="player in value">
+            player: {$ player.name $}
+        </li>
+    </ul>
+</div>
+<script>
+    var app = angular.module("chatApp", ['angular.filter'], function ($interpolateProvider) {
+        $interpolateProvider.startSymbol('{$');
+        $interpolateProvider.endSymbol('$}');
+    }, ['$httpProvider', function ($httpProvider) {
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    }
+    ]);
+
+    app.controller("myController", function ($scope) {
+        $scope.azaza = [
+            {name: 'Jani', country: 'Norway'},
+            {name: 'Hege', country: 'Sweden'},
+            {name: 'Kai', country: 'Denmark'}
+        ];
+        $scope.players = [
+            {name: 'Gene', team: 'alpha'},
+            {name: 'George', team: 'beta'},
+            {name: 'Steve', team: 'gamma'},
+            {name: 'Paula', team: 'beta'},
+            {name: 'Scruath', team: 'gamma'}
+        ];
+    });
+    app.controller('ajaxController', function ($scope, $http, $interval) {
+//        $scope.callAtInterval = function () {
+//            $http.get("http://www.w3schools.com/angular/customers.php")
+//                    .then(function (response) {
+//                        $scope.names = response.data.records;
+//                    });
+//            $scope.callAtInterval = function () {
+                $http.get("http://127.0.0.1:8000/messages")
+                        .then(function (response) {
+                            console.log(response.data);
+                            $scope.messages = JSON.parse(response.data);
+                        });
+//            }
+//            $interval(function () {
+//                $scope.callAtInterval();
+//            }, 5000);
+//        $scope.callAtInterval();
+            }
+    );
+</script>
+</body>
+</html>
+<table ng-repeat="message in messages track by $index | groupBy: 'user'">
+    <tr>
+        Group name: {$ message.user $}
+        <td>
+            <div class="messageUser">
+                <b>{$ message.user $}</b>:
+            </div>
+        </td>
+        <td>
+            <div class="messageMessage">
+                {$ message.message $}
+            </div>
+        </td>
+        <td>
+            <div class="messageDateTime">
+                {$ message.date_time | date:'medium'$}
+            </div>
+        </td>
+    </tr>
+</table>

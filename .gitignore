@@ -1,0 +1,9 @@
+/chat.log
+/db.sqlite3
+/static
+/core/static/js/moment.min.js
+/core/static/js/angular-moment.min.js
+/core/templates/test.html
+/core/static/js/angular-filter.js
+/core/static/js/angular-filter.min.js
+.idea/

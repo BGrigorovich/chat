@@ -1,47 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html ng-app="chatApp">
 <head>
     <meta charset="UTF-8">
     <title></title>
+    {% load staticfiles %}
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="{% static 'js/moment.min.js' %}"></script>
+    <script src="{% static 'js/angular-moment.min.js' %}"></script>
+    <script src="{% static 'js/angular-filter.js' %}"></script>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
 </head>
-<body>
-<!--<script type="text/javascript" src="{{ STATIC_URL }} /jquery-1.11.3.min.js"></script>-->
+<body ng-controller="messagesController">
 {% include 'login.html' %}
-<div id="messages">
-    <table>
-        {% for message in messages %}
+{% csrf_token %}
+<div ng-app="chatApp">
+    <table ng-repeat="message in messages track by $index | groupBy: 'user'">
         <tr>
-
+            Group name: {$ message.user $}
             <td>
-                <div class="message_user_id">
-                    <b>{{message.user_id}}:</b>
+                <div class="messageUser">
+                    <b>{$ message.user $}</b>:
                 </div>
             </td>
             <td>
-                <div class="message_message">
-                    {{message.message}}
+                <div class="messageMessage">
+                    {$ message.message $}
                 </div>
-
             </td>
             <td>
-                <div class="message_date_time">
-                    {{message.date_time}}
+                <div class="messageDateTime">
+                    {$ message.date_time | date:'medium'$}
                 </div>
-
             </td>
         </tr>
-        {% endfor %}
     </table>
 </div>
 <div id="send_message">
     {% if user.is_authenticated %}
-    <form action="{% url 'send_message' %}" method="post">
+    <form id="mesage_form" action="" method="post" ng-submit="processForm()">
         {% csrf_token %}
-        <input type="text" name="message" id="message" placeholder="Your message">
+        <input type="text" name="newMessage" id="newMessage" placeholder="Your message" ng-model="message">
         <input type="submit" value="Send">
     </form>
     {% else %}
     <form method="post">
+        {% csrf_token %}
         <input type="text" placeholder="Log in or sign up to send messages" disabled>
         <input type="submit" value="Send" disabled>
     </form>
