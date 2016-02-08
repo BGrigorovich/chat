@@ -10,9 +10,9 @@
 You already logged in
 {% else %}
 <div id="signup_from">
-    <form action="{% url 'signup_form' %}" method="post">
+    <form action="{% url 'signup' %}" method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ signup_form.as_p }}
         <input type="submit" name="signup_button" id="signup_button" value="Sign up">
     </form>
 </div>

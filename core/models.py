@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib import admin
 import datetime
 
 
@@ -7,12 +8,11 @@ class Messages(models.Model):
     id = models.IntegerField(primary_key=True)
     user = models.ForeignKey(User)
     message = models.TextField()
-    date_time = models.DateTimeField()
+    date_time = models.DateTimeField(default=datetime.datetime.now())
 
-    def __str__(self):
-        return self.message
+    def __repr__(self):
+        return '{0}: {1}'.format(self.user, self.message)
 
-    @classmethod
-    def create(cls, user, message):
-        new_message = cls(user=user, message=message, date_time=datetime.datetime.now())
-        return new_message
+
+class MessagesAdmin(admin.ModelAdmin):
+    list_display = ('user', 'message', 'date_time')

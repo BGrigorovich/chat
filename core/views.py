@@ -1,4 +1,6 @@
 import json
+
+from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.template.context_processors import csrf
@@ -18,16 +20,17 @@ def main_page(request):
     args = {}
     args.update(csrf(request))
     if request.is_ajax():
-        print('ajax')
         request_body = json.loads(request.body.decode())
         message = request_body['message']
         logger.info('%s: %s', request.user, message)
-        Messages.save(Messages.create(user=request.user, message=message))
+        new_message = Messages(user=request.user, message=message)
+        new_message.save()
         return
     else:
-        print('not ajax')
+        args['login_form'] = AuthenticationForm()
         messages = Messages.objects.all()
-        return render_to_response('main.html', {'messages': messages}, context_instance=RequestContext(request))
+        args['messages'] = messages
+        return render_to_response('main.html', args, context_instance=RequestContext(request))
 
 
 class MessagesView(ListAPIView):

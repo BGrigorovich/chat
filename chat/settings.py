@@ -3,7 +3,6 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
@@ -14,7 +13,6 @@ SECRET_KEY = 'jag-r0_!kfzk7umgu0yl+9^c@u!a1l6yfv$)k0x@pbkb2x5tr6'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -77,7 +75,6 @@ DATABASES = {
     }
 }
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
@@ -96,20 +93,15 @@ TIME_FORMAT = 'G'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_ROOT = '/home/bogdan/PycharmProjects/chat/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 STATIC_URL = '/static/'
-#
-# TEMPLATE_LOADERS = (
-#     'django.template.loaders.filesystem.Loader',
-#     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
-# )
 
+# Logging
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    # 'disable_existing_loggers': True,
     'formatters': {
         'standard': {
             'format': "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
@@ -119,7 +111,7 @@ LOGGING = {
     'handlers': {
         'null': {
             'level': 'DEBUG',
-            'class': 'django.utils.log.NullHandler',
+            'class': 'logging.NullHandler',
         },
         'logfile': {
             'level': 'DEBUG',
@@ -140,41 +132,3 @@ LOGGING = {
         },
     }
 }
-
-# websockets
-#
-# WEBSOCKET_URL = '/ws/'
-#
-# WS4REDIS_CONNECTION = {
-#     'host': 'localhost',
-#     'port': 8000,
-#     'db': 17,
-#     'password': 'verysecret',
-# }
-#
-# WS4REDIS_EXPIRE = 7200
-#
-# WS4REDIS_PREFIX = 'ws'
-#
-# WS4REDIS_SUBSCRIBER = 'chat.redis_store.RedisSubscriber'
-#
-# WSGI_APPLICATION = 'ws4redis.django_runserver.application'
-#
-# TEMPLATE_CONTEXT_PROCESSORS = (
-#     'django.contrib.auth.context_processors.auth',
-#     'django.core.context_processors.static',
-#     'ws4redis.context_processors.default',
-# )
-#
-# SESSION_ENGINE = 'redis_sessions.session'
-# SESSION_REDIS_PREFIX = 'session'
-#
-#
-# # sse class
-#
-# SSE_BACKEND_CLASS = 'sse_wrapper.backends.redis_based.RedisBasedBackend'
-# SSE_BACKEND_CONNECTION_SETTINGS = {
-#     'host': 'localhost',
-#     'port': 8000,
-#     'db': 0,
-# }
