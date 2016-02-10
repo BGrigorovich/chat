@@ -12,10 +12,7 @@ from .serializers import MessagesSerializer
 logger = logging.getLogger('chat')
 
 
-def signup_page(request):
-    return render_to_response('signup.html', {}, context_instance=RequestContext(request))
-
-
+# todo: rename
 def main_page(request):
     args = {}
     args.update(csrf(request))
@@ -27,7 +24,7 @@ def main_page(request):
         new_message.save()
         return
     else:
-        args['login_form'] = AuthenticationForm()
+        args['form'] = AuthenticationForm()
         messages = Messages.objects.all()
         args['messages'] = messages
         return render_to_response('main.html', args, context_instance=RequestContext(request))

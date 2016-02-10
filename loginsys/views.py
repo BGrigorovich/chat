@@ -1,48 +1,45 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.shortcuts import redirect, render_to_response
-from django.template import RequestContext
-from django.template.context_processors import csrf
-from core.models import Messages
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse_lazy
+from django.views import generic
 
 
-def login_view(request):
-    args = {}
-    args.update(csrf(request))
-    args['messages'] = Messages.objects.all()
-    args['login_form'] = AuthenticationForm()
-    if request.POST:
-        login_form = AuthenticationForm(data=request.POST)
-        if login_form.is_valid():
-            user = authenticate(username=login_form.cleaned_data['username'],
-                                password=login_form.cleaned_data['password'])
-            login(request, user)
-            return redirect('/')
+class LoginView(generic.FormView):
+    form_class = AuthenticationForm
+    success_url = reverse_lazy('home')
+    template_name = 'login.html'
+
+    def form_valid(self, form):
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+        user = authenticate(username=username, password=password)
+
+        if user is not None and user.is_active:
+            login(self.request, user)
+            return super(LoginView, self).form_valid(form)
         else:
-            args['login_error'] = 'Invalid user or password. Try again'
-            return render_to_response('main.html', args, context_instance=RequestContext(request))
-    else:
-        return render_to_response('login.html', args, context_instance=RequestContext(request))
+            return self.form_invalid(form)
 
 
-def logout_view(request):
-    logout(request)
-    return redirect('/')
+class LogoutView(generic.RedirectView):
+    url = reverse_lazy('home')
+
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return super(LogoutView, self).get(request, *args, **kwargs)
 
 
-def signup_view(request):
-    args = {}
-    args.update(csrf(request))
-    args['signup_form'] = UserCreationForm()
-    if request.POST:
-        new_user_form = UserCreationForm(request.POST)
-        if new_user_form.is_valid():
-            new_user_form.save()
-            new_user = authenticate(username=new_user_form.cleaned_data['username'],
-                                    password=new_user_form.cleaned_data['password2'])
-            if not new_user.is_anonymous():
-                login(request, new_user)
-            return redirect('/')
-        else:
-            args['signup_form'] = new_user_form
-    return render_to_response('signup.html', args, context_instance=RequestContext(request))
+class SignupView(generic.CreateView):
+    form_class = UserCreationForm
+    model = User
+    template_name = 'signup.html'
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        valid = super(SignupView, self).form_valid(form)
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password1')
+        new_user = authenticate(username=username, password=password)
+        login(self.request, new_user)
+        return valid

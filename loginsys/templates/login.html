@@ -16,7 +16,7 @@
     {% else %}
         <form action="{% url 'login' %}" method="post">
             {% csrf_token %}
-            {{ login_form.as_p }}
+            {{ form.as_p }}
             <input type="submit" name="login_button" id="login_button" value="Log in">
         </form>
         {% if login_error %}

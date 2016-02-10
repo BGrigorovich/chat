@@ -39,7 +39,7 @@
     {% if user.is_authenticated %}
     <form id="mesage_form" action="" method="post" ng-submit="processForm()">
         {% csrf_token %}
-        <input type="text" name="newMessage" id="newMessage" placeholder="Your message" ng-model="message">
+        <input type="text" name="newMessage" id="newMessage" autocomplete="off" placeholder="Your message" ng-model="message">
         <input type="submit" value="Send">
     </form>
     {% else %}
